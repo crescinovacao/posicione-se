@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posicione-se</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face { font-family: 'Aptos'; src: local('Aptos'), local('Calibri'); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Aptos', Calibri, sans-serif; background: #001B71; min-height: 100vh; color: #210000; }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+        .header { color: white; padding: 24px 16px 20px 16px; text-align: center; }
+        .header .logo { max-width: 120px; margin-bottom: 16px; }
+        .header h1 { font-family: 'Raleway', sans-serif; font-size: 2.4em; font-weight: 700; margin-bottom: 8px; }
+        .etapa { display: none; animation: fadeIn 0.5s ease; }
+        .etapa.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .section-card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); }
+        .section-title { font-family: 'Raleway', sans-serif; font-size: 1.5em; font-weight: 700; color: #001B71; margin-bottom: 20px; }
+
+        /* Formulário participante */
+        .participante-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .participante-form input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Aptos', Calibri, sans-serif; font-size: 1em; transition: border-color 0.3s; }
+        .participante-form input:focus { outline: none; border-color: #007BEA; }
+
+        /* Botões */
+        .btn { padding: 14px 24px; border: none; border-radius: 8px; font-family: 'Raleway', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1em; text-align: center; }
+        .btn-primary { background: #007BEA; color: white; }
+        .btn-primary:hover { background: #0066c7; }
+        .btn-primary:active { background: #0055aa; transform: scale(0.98); }
+        .btn-success { background: #001B71; color: white; }
+        .btn-success:hover { background: #001459; }
+        .btn-success:active { transform: scale(0.98); }
+        .btn-purple { background: #001B71; color: white; }
+        .btn-purple:hover { background: #001459; }
+        .btn-purple:active { transform: scale(0.98); }
+        .btn-voltar { background: transparent; color: #007BEA; border: 2px solid #007BEA; }
+        .btn-voltar:hover { background: #B3DFFF; }
+        .btn-remove { background: #007BEA; color: white; padding: 8px 14px; font-size: 0.85em; }
+        .btn-remove:hover { background: #0066c7; }
+
+        /* Lista participantes */
+        .participantes-list { display: flex; flex-direction: column; gap: 15px; }
+        .participante-card { background: #f8f9fa; border-radius: 12px; padding: 16px; border-left: 4px solid #007BEA; }
+        .participante-card h4 { font-family: 'Raleway', sans-serif; color: #210000; font-size: 1.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .participante-card h4 .numero { background: #007BEA; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0; }
+        .participante-fields { display: flex; flex-direction: column; gap: 12px; }
+        .participante-fields textarea { width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Aptos', Calibri, sans-serif; font-size: 0.95em; resize: vertical; min-height: 80px; transition: border-color 0.3s; }
+        .participante-fields textarea:focus { outline: none; border-color: #007BEA; }
+        .participante-fields label { font-family: 'Raleway', sans-serif; font-size: 0.85em; font-weight: 600; color: #210000; margin-bottom: 6px; display: block; }
+        .field-group { display: flex; flex-direction: column; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 27, 113, 0.7); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 16px; padding: 32px 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0, 27, 113, 0.3); }
+        .modal h3 { font-family: 'Raleway', sans-serif; color: #210000; font-size: 1.4em; margin-bottom: 10px; }
+        .modal p { color: #666; margin-bottom: 20px; font-size: 0.95em; }
+        .modal input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Aptos', Calibri, sans-serif; font-size: 1em; text-align: center; margin-bottom: 15px; }
+        .modal input:focus { outline: none; border-color: #007BEA; }
+        .modal-buttons { display: flex; gap: 10px; }
+        .modal-buttons .btn { flex: 1; }
+        .error-msg { color: #E6233A; font-size: 0.9em; margin-bottom: 10px; display: none; }
+
+        /* Ranking */
+        .ranking-container { display: flex; flex-direction: column; gap: 10px; }
+        .ranking-item { background: #f8f9fa; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; border: 2px solid transparent; transition: border-color 0.2s; }
+        .ranking-position { width: 38px; height: 38px; border-radius: 50%; background: #001B71; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1em; flex-shrink: 0; }
+        .ranking-info { flex: 1; min-width: 0; }
+        .ranking-info h4 { font-family: 'Raleway', sans-serif; color: #210000; font-size: 1em; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ranking-info p { color: #666; font-size: 0.8em; line-height: 1.4; }
+        .ranking-arrows { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+        .btn-arrow { background: #007BEA; color: white; border: none; border-radius: 6px; width: 38px; height: 38px; font-size: 1em; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-arrow:hover { background: #0066c7; }
+        .btn-arrow:active { background: #0055aa; transform: scale(0.95); }
+        .btn-arrow:disabled { background: #ddd; color: #aaa; cursor: default; }
+
+        /* Cartas */
+        .cartas-area { display: flex; flex-direction: column; align-items: center; gap: 32px; margin-top: 24px; }
+        .pilha-section { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+        .pilha-label { font-family: 'Raleway', sans-serif; font-size: 0.9em; font-weight: 600; color: #001B71; text-transform: uppercase; letter-spacing: 0.05em; }
+        .pilha-container { position: relative; width: 100%; max-width: 320px; height: 200px; }
+        .pilha-vazia { width: 100%; height: 100%; border-radius: 16px; background: #f0f0f0; border: 3px dashed #ccc; }
+        .carta { width: 100%; max-width: 320px; height: 200px; border-radius: 16px; position: absolute; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .carta-frente { width: 100%; height: 100%; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; color: white; font-size: 1.4em; font-family: 'Raleway', sans-serif; font-weight: 700; }
+        .carta-revelada { width: 100%; height: 100%; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; background: white; color: #210000; font-size: 0.95em; line-height: 1.5; font-weight: 600; border: 4px solid; box-sizing: border-box; }
+
+        /* Nav buttons */
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
+        .nav-buttons .btn { flex: 1; }
+
+        /* Instrução */
+        .instrucao-box { background: #B3DFFF; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+        .instrucao-box p { color: #210000; font-size: 0.95em; line-height: 1.6; }
+        .instrucao-box strong { color: #001B71; }
+        .regras-list { margin-top: 10px; margin-left: 18px; }
+        .regras-list li { color: #210000; font-size: 0.95em; line-height: 1.6; margin-bottom: 6px; }
+        .regras-list li::marker { color: #001B71; }
+
+        /* Aviso */
+        .aviso-campos { background: #F9CBD2; border: 1px solid #E6233A; border-radius: 8px; padding: 12px 16px; margin-top: 16px; color: #62003B; font-size: 0.9em; display: none; }
+        .aviso-campos.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Divider entre pilhas */
+        .pilhas-wrapper { display: flex; flex-direction: column; gap: 32px; width: 100%; align-items: center; }
+
+        @media (min-width: 600px) {
+            .container { padding: 40px 20px; }
+            .header { padding: 40px 20px 30px 20px; }
+            .header h1 { font-size: 3em; }
+            .header .logo { max-width: 150px; margin-bottom: 24px; }
+            .section-card { padding: 30px; }
+            .participante-form { flex-direction: row; }
+            .participante-fields { flex-direction: row; }
+            .participante-fields .field-group { flex: 1; }
+            .pilhas-wrapper { flex-direction: row; align-items: flex-start; justify-content: center; gap: 40px; }
+            .pilha-section { width: auto; }
+            .pilha-container { width: 280px; }
+            .carta { width: 280px; }
+            .nav-buttons .btn { flex: none; }
+            .nav-buttons { justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="https://i.imgur.com/eHkmf1G.png" alt="Logo Cresci e Cegos">
+            <h1>Posicione-se</h1>
+        </div>
+
+        <!-- ETAPA 1 -->
+        <div class="etapa active" id="etapa1">
+            <div class="section-card">
+                <h2 class="section-title">Cadastro do Grupo</h2>
+                <div class="instrucao-box">
+                    <p>Adicione cada participante do grupo e preencha seus <strong>pontos fortes</strong> e <strong>pontos de desenvolvimento</strong>.</p>
+                </div>
+                <div class="participante-form">
+                    <input type="text" id="nomeParticipante" placeholder="Nome da pessoa participante" onkeypress="if(event.key==='Enter') adicionarParticipante()">
+                    <button class="btn btn-primary" onclick="adicionarParticipante()">+ Adicionar</button>
+                </div>
+                <div class="participantes-list" id="participantesList"></div>
+                <div class="aviso-campos" id="avisoCampos">Para avançar, todos os campos devem ser preenchidos.</div>
+                <div class="nav-buttons" style="justify-content: flex-end;">
+                    <button class="btn btn-success" style="flex: none;" onclick="abrirModalSenha(1)">Avançar →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ETAPA 2 -->
+        <div class="etapa" id="etapa2">
+            <div class="section-card">
+                <h2 class="section-title">Ranking</h2>
+                <div class="instrucao-box">
+                    <p><strong>Regras:</strong></p>
+                    <ul class="regras-list">
+                        <li>Considerando a missão apresentada, use as setas para ordenar.</li>
+                        <li>A ordem deve ser da pessoa mais preparada (1) até aquela com maior espaço de desenvolvimento (5).</li>
+                        <li>Ninguém pode se colocar em último ou abdicar de avaliação.</li>
+                        <li>As decisões das posições devem ser consensuais de todas as pessoas do grupo.</li>
+                    </ul>
+                    <p style="margin-top: 12px;"><strong>Não vale fugir do conflito, hein?</strong></p>
+                </div>
+                <div class="ranking-container" id="rankingContainer"></div>
+                <div class="nav-buttons">
+                    <button class="btn btn-voltar" onclick="irParaEtapa(1)">← Voltar</button>
+                    <button class="btn btn-purple" onclick="abrirModalSenha(2)">Avançar →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ETAPA 3 -->
+        <div class="etapa" id="etapa3">
+            <div class="section-card">
+                <h2 class="section-title">Cartas de Posicionamento</h2>
+                <div class="instrucao-box">
+                    <p>Toque em <strong>Sortear</strong> para revelar uma carta. Cada pessoa participante deve responder à carta revelada.</p>
+                </div>
+                <div class="pilhas-wrapper">
+                    <div class="pilha-section">
+                        <span class="pilha-label">Baralho</span>
+                        <div class="pilha-container" id="pilhaCartas"></div>
+                        <button class="btn btn-primary" id="btnSortear" onclick="revelarCarta()">Sortear</button>
+                    </div>
+                    <div class="pilha-section">
+                        <span class="pilha-label">Revelada</span>
+                        <div class="pilha-container" id="cartasReveladas"></div>
+                    </div>
+                </div>
+                <div class="nav-buttons" style="margin-top: 32px; justify-content: flex-end;">
+                    <button class="btn btn-success" style="flex: none;" onclick="resetarDinamica()">Reiniciar Dinâmica</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SENHA -->
+    <div class="modal-overlay" id="modalSenha">
+        <div class="modal">
+            <h3>Digite a senha</h3>
+            <p>Para avançar para a próxima etapa, digite a senha fornecida pela pessoa consultora.</p>
+            <input type="password" id="inputSenha" placeholder="Senha" onkeypress="if(event.key === 'Enter') verificarSenha()">
+            <p class="error-msg" id="errorMsg">Senha incorreta. Tente novamente.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="verificarSenha()">Confirmar</button>
+                <button class="btn" style="background: #eee; color: #666;" onclick="fecharModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let participantes = [];
+        let etapaAtual = 1;
+        let transicaoDesejada = 0;
+        let rankingOrdem = [];
+
+        const coresCartas = ['#733909', '#62003B', '#003E00', '#2D0051', '#876300', '#1a4a6b', '#5c3317', '#2e4a1a', '#4a1a3a', '#1a3a4a'];
+
+        const perguntasOriginais = [
+            "Cite uma fala ou atitude de alguém que te fez repensar sua própria postura.",
+            "Indique quem acha que mais influenciou sua opinião e por quê.",
+            "Aponte quem aqui trouxe uma visão que você não tinha considerado e que te marcou.",
+            "Aponte quem expressou uma opinião com a qual você discordou e como isso te impactou.",
+            "Quem aqui teve uma postura que te incomodou ou confrontou seus valores? Fale sobre isso.",
+            "Quem aqui demonstrou uma coragem que você gostaria de ter? Como isso te inspirou?",
+            "Aponte alguém cuja forma de pensar diferente o(a) desafiou positivamente.",
+            "Qual fala nessa conversa te fez questionar uma crença que você tinha?",
+            "Quem aqui ouviu você de forma genuína e como isso afetou sua abertura?",
+            "Aponte uma pessoa que trouxe uma humildade ou vulnerabilidade que te tocou."
+        ];
+
+        let cartasEmbaralhadas = [];
+        let cartaAtual = 0;
+
+        function embaralharCartas() {
+            cartasEmbaralhadas = perguntasOriginais.map((pergunta, index) => ({
+                pergunta: pergunta,
+                cor: coresCartas[index % coresCartas.length]
+            })).sort(() => Math.random() - 0.5);
+            cartaAtual = 0;
+        }
+
+        function renderizarPilha() {
+            const pilha = document.getElementById('pilhaCartas');
+            const btnSortear = document.getElementById('btnSortear');
+            pilha.innerHTML = '';
+            const restantes = cartasEmbaralhadas.length - cartaAtual;
+            if (restantes === 0) {
+                pilha.innerHTML = '<div class="pilha-vazia"></div>';
+                btnSortear.disabled = false;
+                btnSortear.textContent = 'Reiniciar Baralho';
+                btnSortear.onclick = reiniciarBaralho;
+                return;
+            }
+            btnSortear.disabled = false;
+            btnSortear.textContent = 'Sortear';
+            btnSortear.onclick = revelarCarta;
+            for (let i = 0; i < restantes; i++) {
+                const cartaIndex = cartaAtual + i;
+                const carta = document.createElement('div');
+                carta.className = 'carta';
+                carta.style.top = (i * 3) + 'px';
+                carta.style.left = (i * 3) + 'px';
+                carta.style.zIndex = restantes - i;
+                const cor = cartasEmbaralhadas[cartaIndex].cor;
+                carta.innerHTML = `<div class="carta-frente" style="background: ${cor};">Posicione-se</div>`;
+                pilha.appendChild(carta);
+            }
+        }
+
+        function reiniciarBaralho() {
+            embaralharCartas();
+            renderizarPilha();
+            document.getElementById('cartasReveladas').innerHTML = '';
+        }
+
+        function revelarCarta() {
+            if (cartaAtual >= cartasEmbaralhadas.length) return;
+            const reveladas = document.getElementById('cartasReveladas');
+            reveladas.innerHTML = '';
+            const cartaInfo = cartasEmbaralhadas[cartaAtual];
+            const carta = document.createElement('div');
+            carta.className = 'carta';
+            carta.style.top = '0px';
+            carta.style.left = '0px';
+            carta.style.zIndex = 1;
+            carta.style.animation = 'slideIn 0.4s ease';
+            carta.innerHTML = `<div class="carta-revelada" style="border-color: ${cartaInfo.cor};">${cartaInfo.pergunta}</div>`;
+            reveladas.appendChild(carta);
+            cartaAtual++;
+            renderizarPilha();
+        }
+
+        function adicionarParticipante() {
+            const nome = document.getElementById('nomeParticipante').value.trim();
+            if (!nome) return;
+            if (participantes.length >= 5) { alert('Máximo de 5 participantes por grupo.'); return; }
+            participantes.push({ nome: nome, pontosFortes: '', pontosDesenvolvimento: '' });
+            document.getElementById('nomeParticipante').value = '';
+            renderizarParticipantes();
+        }
+
+        function renderizarParticipantes() {
+            const lista = document.getElementById('participantesList');
+            lista.innerHTML = participantes.map((p, index) => `
+                <div class="participante-card">
+                    <h4>
+                        <span class="numero">${index + 1}</span>
+                        ${p.nome}
+                        <button class="btn btn-remove" onclick="removerParticipante(${index})" style="margin-left: auto;">✕</button>
+                    </h4>
+                    <div class="participante-fields">
+                        <div class="field-group">
+                            <label>Pontos Fortes</label>
+                            <textarea placeholder="Descreva os pontos fortes..." oninput="atualizarParticipante(${index}, 'pontosFortes', this.value)">${p.pontosFortes}</textarea>
+                        </div>
+                        <div class="field-group">
+                            <label>Pontos de Desenvolvimento</label>
+                            <textarea placeholder="Descreva os pontos de desenvolvimento..." oninput="atualizarParticipante(${index}, 'pontosDesenvolvimento', this.value)">${p.pontosDesenvolvimento}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removerParticipante(index) { participantes.splice(index, 1); renderizarParticipantes(); }
+        function atualizarParticipante(index, campo, valor) { participantes[index][campo] = valor; }
+
+        function abrirModalSenha(transicao) {
+            const avisoCampos = document.getElementById('avisoCampos');
+            if (transicao === 1 && participantes.length === 0) { avisoCampos.classList.add('active'); return; }
+            if (transicao === 1) {
+                for (let i = 0; i < participantes.length; i++) {
+                    if (!participantes[i].pontosFortes.trim() || !participantes[i].pontosDesenvolvimento.trim()) {
+                        avisoCampos.classList.add('active'); return;
+                    }
+                }
+            }
+            avisoCampos.classList.remove('active');
+            transicaoDesejada = transicao;
+            document.getElementById('modalSenha').classList.add('active');
+            document.getElementById('inputSenha').value = '';
+            document.getElementById('inputSenha').focus();
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function fecharModal() { document.getElementById('modalSenha').classList.remove('active'); }
+
+        function verificarSenha() {
+            const senhaDigitada = document.getElementById('inputSenha').value.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const senhasValidas = { 1: ['missao'], 2: ['desafio'] };
+            if (senhasValidas[transicaoDesejada].includes(senhaDigitada)) {
+                fecharModal();
+                if (transicaoDesejada === 1) { irParaEtapa(2); }
+                else if (transicaoDesejada === 2) { irParaEtapa(3); }
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        function irParaEtapa(etapa) {
+            document.querySelectorAll('.etapa').forEach(e => e.classList.remove('active'));
+            document.getElementById('etapa' + etapa).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            etapaAtual = etapa;
+            if (etapa === 2) { gerarRanking(); }
+            if (etapa === 3) {
+                embaralharCartas();
+                renderizarPilha();
+                document.getElementById('cartasReveladas').innerHTML = '';
+            }
+        }
+
+        function gerarRanking() {
+            rankingOrdem = participantes.map((_, i) => i);
+            renderizarRanking();
+        }
+
+        function renderizarRanking() {
+            const container = document.getElementById('rankingContainer');
+            container.innerHTML = rankingOrdem.map((pIndex, pos) => {
+                const p = participantes[pIndex];
+                return `<div class="ranking-item" data-index="${pIndex}">
+                    <span class="ranking-position">${pos + 1}</span>
+                    <div class="ranking-info">
+                        <h4>${p.nome}</h4>
+                        <p><strong>Fortes:</strong> ${p.pontosFortes || '—'}<br><strong>Desenvolvimento:</strong> ${p.pontosDesenvolvimento || '—'}</p>
+                    </div>
+                    <div class="ranking-arrows">
+                        <button class="btn-arrow" onclick="moverItem(${pos}, -1)" ${pos === 0 ? 'disabled' : ''}>▲</button>
+                        <button class="btn-arrow" onclick="moverItem(${pos}, 1)" ${pos === rankingOrdem.length - 1 ? 'disabled' : ''}>▼</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function moverItem(pos, direcao) {
+            const novaPosicao = pos + direcao;
+            if (novaPosicao < 0 || novaPosicao >= rankingOrdem.length) return;
+            [rankingOrdem[pos], rankingOrdem[novaPosicao]] = [rankingOrdem[novaPosicao], rankingOrdem[pos]];
+            renderizarRanking();
+        }
+
+        function resetarDinamica() {
+            if (confirm('Tem certeza que deseja reiniciar a dinâmica? Todos os dados serão perdidos.')) {
+                participantes = [];
+                renderizarParticipantes();
+                embaralharCartas();
+                renderizarPilha();
+                document.getElementById('cartasReveladas').innerHTML = '';
+                irParaEtapa(1);
+            }
+        }
+    </script>
+</body>
+</html>
