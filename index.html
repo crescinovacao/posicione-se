@@ -12,17 +12,18 @@
         .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
         .header { color: white; padding: 24px 16px 20px 16px; text-align: center; }
         .header .logo { max-width: 120px; margin-bottom: 16px; }
-        .header h1 { font-family: 'Raleway', sans-serif; font-size: 2.4em; font-weight: 700; margin-bottom: 8px; }
+        .header h1 { font-family: 'Raleway', sans-serif; font-size: 1.8em; font-weight: 700; margin-bottom: 8px; }
         .etapa { display: none; animation: fadeIn 0.5s ease; }
         .etapa.active { display: block; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .section-card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); }
-        .section-title { font-family: 'Raleway', sans-serif; font-size: 1.5em; font-weight: 700; color: #001B71; margin-bottom: 20px; }
+        .section-title { font-family: 'Raleway', sans-serif; font-size: 1.2em; font-weight: 700; color: #001B71; margin-bottom: 20px; }
 
         /* Formulário participante */
-        .participante-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .participante-form input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Aptos', Calibri, sans-serif; font-size: 1em; transition: border-color 0.3s; }
+        .participante-form { display: flex; flex-direction: row; gap: 10px; margin-bottom: 20px; }
+        .participante-form input { flex: 1; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Aptos', Calibri, sans-serif; font-size: 1em; transition: border-color 0.3s; min-width: 0; }
+        .participante-form .btn { white-space: nowrap; flex-shrink: 0; }
         .participante-form input:focus { outline: none; border-color: #007BEA; }
 
         /* Botões */
@@ -83,9 +84,11 @@
         .pilha-label { font-family: 'Raleway', sans-serif; font-size: 0.9em; font-weight: 600; color: #001B71; text-transform: uppercase; letter-spacing: 0.05em; }
         .pilha-container { position: relative; width: 100%; max-width: 320px; height: 200px; }
         .pilha-vazia { width: 100%; height: 100%; border-radius: 16px; background: #f0f0f0; border: 3px dashed #ccc; }
-        .carta { width: 100%; max-width: 320px; height: 200px; border-radius: 16px; position: absolute; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .carta-frente { width: 100%; height: 100%; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; color: white; font-size: 1.4em; font-family: 'Raleway', sans-serif; font-weight: 700; }
-        .carta-revelada { width: 100%; height: 100%; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; background: white; color: #210000; font-size: 0.95em; line-height: 1.5; font-weight: 600; border: 4px solid; box-sizing: border-box; }
+        .carta { width: 100%; max-width: 320px; height: 200px; border-radius: 16px; position: absolute; }
+        .carta-frente { width: 100%; height: 100%; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; color: white; font-size: 1.4em; font-family: 'Raleway', sans-serif; font-weight: 700; background: linear-gradient(135deg, #001B71 0%, #007BEA 100%); position: relative; overflow: hidden; }
+        .carta-revelada { width: 100%; height: 100%; border-radius: 16px; display: block; padding: 20px; text-align: center; background: #f5f5f5; color: #210000; font-size: 1.15em; line-height: 1.3; font-weight: 400; border: 4px solid; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+        .carta-revelada span { display: block; }
+        .carta-revelada strong { color: #210000; font-weight: 600; }
 
         /* Nav buttons */
         .nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
@@ -107,8 +110,8 @@
         .pilhas-wrapper { display: flex; flex-direction: column; gap: 32px; width: 100%; align-items: center; }
 
         @media (min-width: 600px) {
-            .container { padding: 40px 20px; }
-            .header { padding: 40px 20px 30px 20px; }
+            .container { padding: 20px 20px; }
+            .header { padding: 16px 20px 20px 20px; }
             .header h1 { font-size: 3em; }
             .header .logo { max-width: 150px; margin-bottom: 24px; }
             .section-card { padding: 30px; }
@@ -177,17 +180,12 @@
             <div class="section-card">
                 <h2 class="section-title">Cartas de Posicionamento</h2>
                 <div class="instrucao-box">
-                    <p>Toque em <strong>Sortear</strong> para revelar uma carta. Cada pessoa participante deve responder à carta revelada.</p>
+                    <p>Toque em <strong>Revelar Carta</strong> para ver a pergunta. Toque em <strong>Próxima Carta</strong> para avançar.</p>
                 </div>
                 <div class="pilhas-wrapper">
                     <div class="pilha-section">
-                        <span class="pilha-label">Baralho</span>
                         <div class="pilha-container" id="pilhaCartas"></div>
                         <button class="btn btn-primary" id="btnSortear" onclick="revelarCarta()">Sortear</button>
-                    </div>
-                    <div class="pilha-section">
-                        <span class="pilha-label">Revelada</span>
-                        <div class="pilha-container" id="cartasReveladas"></div>
                     </div>
                 </div>
                 <div class="nav-buttons" style="margin-top: 32px; justify-content: flex-end;">
@@ -205,35 +203,45 @@
             <input type="password" id="inputSenha" placeholder="Senha" onkeypress="if(event.key === 'Enter') verificarSenha()">
             <p class="error-msg" id="errorMsg">Senha incorreta. Tente novamente.</p>
             <div class="modal-buttons">
-                <button class="btn btn-primary" onclick="verificarSenha()">Confirmar</button>
                 <button class="btn" style="background: #eee; color: #666;" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="verificarSenha()">Confirmar</button>
             </div>
         </div>
     </div>
 
     <script>
-        let participantes = [];
-        let etapaAtual = 1;
+        let participantes = JSON.parse(sessionStorage.getItem('posicione_participantes') || '[]');
+        let etapaAtual = parseInt(sessionStorage.getItem('posicione_etapa') || '1');
+        let rankingOrdem = JSON.parse(sessionStorage.getItem('posicione_ranking') || '[]');
+        let cartaAtual = parseInt(sessionStorage.getItem('posicione_carta') || '0');
+        let cartaVirada = sessionStorage.getItem('posicione_virada') === 'true';
         let transicaoDesejada = 0;
-        let rankingOrdem = [];
+
+        function salvarEstado() {
+            sessionStorage.setItem('posicione_participantes', JSON.stringify(participantes));
+            sessionStorage.setItem('posicione_etapa', etapaAtual);
+            sessionStorage.setItem('posicione_ranking', JSON.stringify(rankingOrdem));
+            sessionStorage.setItem('posicione_carta', cartaAtual);
+            sessionStorage.setItem('posicione_virada', cartaVirada);
+            sessionStorage.setItem('posicione_cartas', JSON.stringify(cartasEmbaralhadas));
+        }
 
         const coresCartas = ['#733909', '#62003B', '#003E00', '#2D0051', '#876300', '#1a4a6b', '#5c3317', '#2e4a1a', '#4a1a3a', '#1a3a4a'];
 
         const perguntasOriginais = [
-            "Cite uma fala ou atitude de alguém que te fez repensar sua própria postura.",
-            "Indique quem acha que mais influenciou sua opinião e por quê.",
-            "Aponte quem aqui trouxe uma visão que você não tinha considerado e que te marcou.",
-            "Aponte quem expressou uma opinião com a qual você discordou e como isso te impactou.",
-            "Quem aqui teve uma postura que te incomodou ou confrontou seus valores? Fale sobre isso.",
-            "Quem aqui demonstrou uma coragem que você gostaria de ter? Como isso te inspirou?",
-            "Aponte alguém cuja forma de pensar diferente o(a) desafiou positivamente.",
-            "Qual fala nessa conversa te fez questionar uma crença que você tinha?",
-            "Quem aqui ouviu você de forma genuína e como isso afetou sua abertura?",
-            "Aponte uma pessoa que trouxe uma humildade ou vulnerabilidade que te tocou."
+            "Aponte alguém cuja forma<br>de pensar diferente o(a)<br><strong>desafiou positivamente</strong>.",
+            "Quem aqui teve uma postura<br>que te <strong>incomodou ou<br>confrontou seus valores</strong>?<br>Fale sobre isso.",
+            "Aponte quem aqui trouxe uma<br><strong>visão que você não tinha<br>considerado</strong> e que te marcou.",
+            "Quem aqui te <strong>ouviu de<br>forma genuína</strong> e como isso<br>afetou sua abertura?",
+            "Qual fala te fez <strong>questionar<br>uma crença</strong> que você tinha?",
+            "Aponte uma pessoa que<br>trouxe uma <strong>humildade ou<br>vulnerabilidade</strong> que te tocou.",
+            "Indique quem acha que<br>mais <strong>influenciou sua<br>opinião</strong> e por quê.",
+            "Quem aqui demonstrou uma<br><strong>coragem</strong> que você gostaria de<br>ter? Como isso te inspirou?",
+            "Cite uma <strong>fala ou atitude</strong> de<br>alguém que te fez repensar<br>sua própria postura.",
+            "Aponte quem expressou<br>uma <strong>opinião com a qual<br>você discordou</strong> e como<br>isso te impactou."
         ];
 
         let cartasEmbaralhadas = [];
-        let cartaAtual = 0;
 
         function embaralharCartas() {
             cartasEmbaralhadas = perguntasOriginais.map((pergunta, index) => ({
@@ -247,50 +255,51 @@
             const pilha = document.getElementById('pilhaCartas');
             const btnSortear = document.getElementById('btnSortear');
             pilha.innerHTML = '';
-            const restantes = cartasEmbaralhadas.length - cartaAtual;
-            if (restantes === 0) {
+
+            if (cartaAtual >= cartasEmbaralhadas.length) {
                 pilha.innerHTML = '<div class="pilha-vazia"></div>';
-                btnSortear.disabled = false;
                 btnSortear.textContent = 'Reiniciar Baralho';
                 btnSortear.onclick = reiniciarBaralho;
                 return;
             }
-            btnSortear.disabled = false;
-            btnSortear.textContent = 'Sortear';
+
+            const cartaInfo = cartasEmbaralhadas[cartaAtual];
+            const restantes = cartasEmbaralhadas.length - cartaAtual;
+
+            btnSortear.textContent = cartaVirada ? 'Próxima Carta' : 'Revelar Carta';
             btnSortear.onclick = revelarCarta;
-            for (let i = 0; i < restantes; i++) {
-                const cartaIndex = cartaAtual + i;
-                const carta = document.createElement('div');
-                carta.className = 'carta';
-                carta.style.top = (i * 3) + 'px';
-                carta.style.left = (i * 3) + 'px';
-                carta.style.zIndex = restantes - i;
-                const cor = cartasEmbaralhadas[cartaIndex].cor;
-                carta.innerHTML = `<div class="carta-frente" style="background: ${cor};">Posicione-se</div>`;
-                pilha.appendChild(carta);
+
+            // carta da frente
+            const frente = document.createElement('div');
+            frente.className = 'carta';
+            frente.style.top = '0px';
+            frente.style.left = '0px';
+            frente.style.zIndex = '10';
+            if (cartaVirada) {
+                frente.innerHTML = `<div class="carta-revelada" style="border-color: #007BEA;"><span>${cartaInfo.pergunta}</span></div>`;
+            } else {
+                frente.innerHTML = `<div class="carta-frente" style="background: linear-gradient(135deg, #001B71 0%, #007BEA 100%);">✦ Posicione-se ✦</div>`;
             }
+            pilha.appendChild(frente);
         }
 
         function reiniciarBaralho() {
             embaralharCartas();
+            cartaAtual = 0;
+            cartaVirada = false;
+            salvarEstado();
             renderizarPilha();
-            document.getElementById('cartasReveladas').innerHTML = '';
         }
 
         function revelarCarta() {
             if (cartaAtual >= cartasEmbaralhadas.length) return;
-            const reveladas = document.getElementById('cartasReveladas');
-            reveladas.innerHTML = '';
-            const cartaInfo = cartasEmbaralhadas[cartaAtual];
-            const carta = document.createElement('div');
-            carta.className = 'carta';
-            carta.style.top = '0px';
-            carta.style.left = '0px';
-            carta.style.zIndex = 1;
-            carta.style.animation = 'slideIn 0.4s ease';
-            carta.innerHTML = `<div class="carta-revelada" style="border-color: ${cartaInfo.cor};">${cartaInfo.pergunta}</div>`;
-            reveladas.appendChild(carta);
-            cartaAtual++;
+            if (cartaAtual === 0 && !cartaVirada) {
+                cartaVirada = true;
+            } else {
+                cartaAtual++;
+                cartaVirada = true;
+            }
+            salvarEstado();
             renderizarPilha();
         }
 
@@ -327,7 +336,7 @@
         }
 
         function removerParticipante(index) { participantes.splice(index, 1); renderizarParticipantes(); }
-        function atualizarParticipante(index, campo, valor) { participantes[index][campo] = valor; }
+        function atualizarParticipante(index, campo, valor) { participantes[index][campo] = valor; salvarEstado(); }
 
         function abrirModalSenha(transicao) {
             const avisoCampos = document.getElementById('avisoCampos');
@@ -368,10 +377,16 @@
             etapaAtual = etapa;
             if (etapa === 2) { gerarRanking(); }
             if (etapa === 3) {
-                embaralharCartas();
+                const cartasSalvas = sessionStorage.getItem('posicione_cartas');
+                if (cartasSalvas) {
+                    cartasEmbaralhadas = JSON.parse(cartasSalvas);
+                } else {
+                    embaralharCartas();
+                }
+                if (cartasEmbaralhadas.length === 0) embaralharCartas();
                 renderizarPilha();
-                document.getElementById('cartasReveladas').innerHTML = '';
             }
+            salvarEstado();
         }
 
         function gerarRanking() {
@@ -402,18 +417,34 @@
             if (novaPosicao < 0 || novaPosicao >= rankingOrdem.length) return;
             [rankingOrdem[pos], rankingOrdem[novaPosicao]] = [rankingOrdem[novaPosicao], rankingOrdem[pos]];
             renderizarRanking();
+            salvarEstado();
         }
 
         function resetarDinamica() {
             if (confirm('Tem certeza que deseja reiniciar a dinâmica? Todos os dados serão perdidos.')) {
                 participantes = [];
-                renderizarParticipantes();
+                rankingOrdem = [];
+                cartaAtual = 0;
+                cartaVirada = false;
+                sessionStorage.clear();
                 embaralharCartas();
-                renderizarPilha();
-                document.getElementById('cartasReveladas').innerHTML = '';
+                renderizarParticipantes();
                 irParaEtapa(1);
             }
         }
+
+        // Restaurar estado ao carregar
+        if (etapaAtual > 1) {
+            document.querySelectorAll('.etapa').forEach(e => e.classList.remove('active'));
+            document.getElementById('etapa' + etapaAtual).classList.add('active');
+            if (etapaAtual === 2) { gerarRanking(); }
+            if (etapaAtual === 3) {
+                const cartasSalvas = sessionStorage.getItem('posicione_cartas');
+                if (cartasSalvas) cartasEmbaralhadas = JSON.parse(cartasSalvas);
+                renderizarPilha();
+            }
+        }
+        renderizarParticipantes();
     </script>
 </body>
 </html>
